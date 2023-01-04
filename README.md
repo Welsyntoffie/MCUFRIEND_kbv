@@ -1,4 +1,5 @@
 # THIS IS A FORK
+For 8bit SSD1963 TFT with resolustion of 480x272
 
 #MCUFRIEND_kbv 
 Library for Uno 2.4, 2.8, 3.5, 3.6, 3.95 inch mcufriend  Shields
