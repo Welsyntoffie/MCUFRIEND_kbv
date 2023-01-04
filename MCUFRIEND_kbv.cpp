@@ -1,14 +1,14 @@
 //#define SUPPORT_0139              //S6D0139 +280 bytes
-#define SUPPORT_0154              //S6D0154 +320 bytes
+//#define SUPPORT_0154              //S6D0154 +320 bytes
 //#define SUPPORT_05A1              //for S6D05A1
 //#define SUPPORT_1289              //SSD1289,SSD1297 (ID=0x9797) +626 bytes, 0.03s
 //#define SUPPORT_1580              //R61580 Untested
 #define SUPPORT_1963              //only works with 16BIT bus anyway
 //#define SUPPORT_4532              //LGDP4532 +120 bytes.  thanks Leodino
-#define SUPPORT_4535              //LGDP4535 +180 bytes
-#define SUPPORT_68140             //RM68140 +52 bytes defaults to PIXFMT=0x55
+//#define SUPPORT_4535              //LGDP4535 +180 bytes
+//#define SUPPORT_68140             //RM68140 +52 bytes defaults to PIXFMT=0x55
 //#define SUPPORT_7735
-#define SUPPORT_7781              //ST7781 +172 bytes
+//#define SUPPORT_7781              //ST7781 +172 bytes
 //#define SUPPORT_8230              //UC8230 +118 bytes
 //#define SUPPORT_8347D             //HX8347-D, HX8347-G, HX8347-I, HX8367-A +520 bytes, 0.27s
 //#define SUPPORT_8347A             //HX8347-A +500 bytes, 0.27s
@@ -17,13 +17,13 @@
 //#define SUPPORT_8357D_GAMMA       //monster 34 byte 
 //#define SUPPORT_9163              //
 //#define SUPPORT_9225              //ILI9225-B, ILI9225-G ID=0x9225, ID=0x9226, ID=0x6813 +380 bytes
-#define SUPPORT_9320              //ID=0x0001, R61505, SPFD5408, ILI9320
-#define SUPPORT_9325              //RM68090, ILI9325, ILI9328, ILI9331, ILI9335 
+//#define SUPPORT_9320              //ID=0x0001, R61505, SPFD5408, ILI9320
+//#define SUPPORT_9325              //RM68090, ILI9325, ILI9328, ILI9331, ILI9335 
 //#define SUPPORT_9326_5420         //ILI9326, SPFD5420 +246 bytes
 //#define SUPPORT_9342              //costs +114 bytes
 //#define SUPPORT_9806              //UNTESTED
-#define SUPPORT_9488_555          //costs +230 bytes, 0.03s / 0.19s
-#define SUPPORT_B509_7793         //R61509, ST7793 +244 bytes
+//#define SUPPORT_9488_555          //costs +230 bytes, 0.03s / 0.19s
+//#define SUPPORT_B509_7793         //R61509, ST7793 +244 bytes
 //#define OFFSET_9327 32            //costs about 103 bytes, 0.08s
 
 #include "MCUFRIEND_kbv.h"
@@ -1398,17 +1398,18 @@ void MCUFRIEND_kbv::begin(uint16_t ID)
         };
         // from UTFTv2.82 initlcd.h
         static const uint8_t SSD1963_480_regValues[] PROGMEM = {
-            (0xE2), 3, 0x23, 0x02, 0x54,        //PLL multiplier, set PLL clock to 120M
+            (0xE2), 3, 0x3B, 0x02, 0x04,        //PLL multiplier, set PLL clock to 120M
             (0xE0), 1, 0x01,    // PLL enable
             TFTLCD_DELAY8, 10,
-            (0xE0), 1, 0x03,    //
+            (0xE0), 1, 0x03,    // Switch to use PLL clock
             TFTLCD_DELAY8, 10,
             0x01, 0,            //Soft Reset
             TFTLCD_DELAY8, 100,
-            (0xE6), 3, 0x01, 0x1F, 0xFF,        //PLL setting for PCLK, depends on resolution
+            (0xE6), 3, 0x00, 0xb8, 0x50,        //PLL setting for PCLK, depends on resolution
             (0xB0), 7, 0x20, 0x00, 0x01, 0xDF, 0x01, 0x0F, 0x00,        //LCD SPECIFICATION
-            (0xB4), 8, 0x02, 0x13, 0x00, 0x08, 0x2B, 0x00, 0x02, 0x00,  //HSYNC
-            (0xB6), 7, 0x01, 0x20, 0x00, 0x04, 0x0C, 0x00, 0x02,        //VSYNC
+            (0xB4), 8, 0x02, 0x0c, 0x00, 0x2a, 0x07, 0x00, 0x00, 0x00,  //HSYNC
+            (0xB6), 7, 0x01, 0x1d, 0x00, 0x0b, 0x09, 0x00, 0x00,        //VSYNC
+			(0x36), 1, 0x00,
             (0xBA), 1, 0x0F,    //GPIO[3:0] out 1
             (0xB8), 2, 0x07, 0x01,      //GPIO3=input, GPIO[2:0]=output
             (0xF0), 1, SSD1963_PIXDATA,    //pixel data interface
@@ -1417,19 +1418,29 @@ void MCUFRIEND_kbv::begin(uint16_t ID)
             0x11, 0,            //Sleep Out
             TFTLCD_DELAY8, 100,
             0x29, 0,            //Display On
-            (0xBE), 6, 0x06, 0xF0, 0x01, 0xF0, 0x00, 0x00,      //set PWM for B/L
-            (0xD0), 1, 0x0D,
+            //(0xBE), 6, 0x00, 0x19, 0x01, 0xF0, 0x00, 0x00,      //set PWM for B/L = Bright 10%
+			//(0xBE), 6, 0x00, 0x50, 0x01, 0xF0, 0x00, 0x00,      //set PWM for B/L = Bright 20%	
+			//(0xBE), 6, 0x00, 0x4D, 0x01, 0xF0, 0x00, 0x00,      //set PWM for B/L = Bright 30%
+			//(0xBE), 6, 0x00, 0x5A, 0x01, 0xF0, 0x00, 0x00,      //set PWM for B/L = Bright 40%
+			//(0xBE), 6, 0x00, 0x8C, 0x01, 0xF0, 0x00, 0x00,      //set PWM for B/L = Bright 50%
+			//(0xBE), 6, 0x00, 0x98, 0x01, 0xF0, 0x00, 0x00,      //set PWM for B/L = Bright 60%
+			(0xBE), 6, 0x00, 0xB2, 0x01, 0xF0, 0x00, 0x00,      //set PWM for B/L = Bright 70%
+			//(0xBE), 6, 0x00, 0xCB, 0x01, 0xF0, 0x00, 0x00,      //set PWM for B/L = Bright 80%
+			//(0xBE), 6, 0x00, 0xE5, 0x01, 0xF0, 0x00, 0x00,      //set PWM for B/L = Bright 90%
+			//(0xBE), 6, 0x00, 0xFF, 0x01, 0xF0, 0x00, 0x00,      //set PWM for B/L = Bright 100%
+            
+			//(0xD0), 1, 0x0D,
         };
-//        table8_ads = SSD1963_480_regValues, table_size = sizeof(SSD1963_480_regValues);
-        table8_ads = SSD1963_800_regValues, table_size = sizeof(SSD1963_800_regValues);
+        table8_ads = SSD1963_480_regValues, table_size = sizeof(SSD1963_480_regValues);
+//        table8_ads = SSD1963_800_regValues, table_size = sizeof(SSD1963_800_regValues);
 //        table8_ads = SSD1963_NHD_50_regValues, table_size = sizeof(SSD1963_NHD_50_regValues);
 //        table8_ads = SSD1963_NHD_70_regValues, table_size = sizeof(SSD1963_NHD_70_regValues);
 //        table8_ads = SSD1963_800NEW_regValues, table_size = sizeof(SSD1963_800NEW_regValues);
 //        table8_ads = SSD1963_800ALT_regValues, table_size = sizeof(SSD1963_800ALT_regValues);
         p16 = (int16_t *) & HEIGHT;
-        *p16 = 480;
+        *p16 = 272;
         p16 = (int16_t *) & WIDTH;
-        *p16 = 800;
+        *p16 = 480;
         break;
 #endif
 
