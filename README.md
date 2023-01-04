@@ -1,33 +1,11 @@
 # THIS IS A FORK
-For 8bit SSD1963 TFT with resolution of 480x272
+For 8bit SSD1963 TFT with resolution of 480x272, 4.3 inch on Arduino DUE
+
+//LCD pins   |D7  |D6  |D5  |D4  |D3  |D2  |D1  |D0  |  |RD  |WR  |RS  |CS  |RST |
+//SAM3XE pin |PD9 |PA7 |PD10|PC1 |PC2 |PC3 |PC4 |PC5 |  |PA20|PC7 |PC6 |PC8 |PC9 |
+//Due pins   |30  |31  |32  |33  |34  |35  |36  |37  |  |43  |39  |38  |40  |41  |
 
 #MCUFRIEND_kbv 
-Library for Uno 2.4, 2.8, 3.5, 3.6, 3.95 inch mcufriend  Shields
 
-1. The Arduino Library Manager should find and install MCUFRIEND_kbv library
 
-2. Install the Adafruit_GFX library if not already in your User libraries.
-
-3. Insert your Mcufriend style display shield into UNO.   Only 28-pin shields are supported.
-
-4. Build any of the Examples from the File->Examples->Mcufriend_kbv menu.  e.g.
-
-graphictest_kbv.ino: shows all the methods.
-
-LCD_ID_readreg.ino:  diagnostic check to identify unsupported controllers.
-
-MCUFRIEND_kbv inherits all the methods from 
-the Adafruit_GFX class: https://learn.adafruit.com/adafruit-gfx-graphics-library/overview 
-and Print class: https://www.arduino.cc/en/Serial/Print
-
-The only "new" methods are hardware related: 
-vertScroll(), readGRAM(), readPixel(), setAddrWindow(), pushColors(), readID(), begin()
-
-readReg(), pushCommand() access the controller registers
-
-The File layout changed with v2.9.3.   If replacing a pre-v2.9.3 library:
-Please leave IDE.  Delete the existing MCUFRIEND_kbv folder.  Start the IDE.  Install from Library Manager.
-
-HOW TO INSTALL AND USE: is now in "mcufriend_how_to.txt"
-
-CHANGE HISTORY:         is now in "mcufriend_history.txt"
+[Original](https://github.com/prenticedavid/MCUFRIEND_kbv)
